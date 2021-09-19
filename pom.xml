@@ -5,7 +5,7 @@
   <groupId>de.chess383</groupId>
   <artifactId>notation</artifactId>
   <!-- version 2.2.0 == 2.1.1 -->
-  <version>2.2.0</version>
+  <version>2.2.1</version>
   <packaging>jar</packaging>
   <description>notation</description>
   
@@ -15,24 +15,25 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <maven.build.timestamp.format>yyyy-MM-dd HH:mm:ss</maven.build.timestamp.format>
         
-        <chess383.chessexception.version>1.2.0</chess383.chessexception.version>
-        <chess383.graph.version>5.5.0</chess383.graph.version>
-        <chess383.piece.version>1.6.0</chess383.piece.version>
-        <chess383.player.version>1.4.0</chess383.player.version>
-        <chess383.attack.version>1.3.0</chess383.attack.version>
-        <chess383.position.version>1.4.0</chess383.position.version>
-        <chess383.transition.version>1.4.0</chess383.transition.version>
+        <chess383.chessexception.version>1.2.1</chess383.chessexception.version>
+        <chess383.graph.version>5.6.14</chess383.graph.version>
+        <chess383.piece.version>1.6.1</chess383.piece.version>
+        <chess383.player.version>1.4.2</chess383.player.version>
+        <chess383.attack.version>1.3.1</chess383.attack.version>
+        <chess383.position.version>1.4.1</chess383.position.version>
+        <chess383.transition.version>1.4.1</chess383.transition.version>
         
-        <junit-jupiter-api.version>5.7.0</junit-jupiter-api.version>
-        <junit-jupiter-engine.version>5.7.0</junit-jupiter-engine.version>
-        <junit-jupiter-params.version>5.7.0</junit-jupiter-params.version>
-        <assertj-core.version>3.18.1</assertj-core.version>
+        <junit-jupiter.version>5.8.0</junit-jupiter.version>
+        <junit-jupiter-api.version>${junit-jupiter.version}</junit-jupiter-api.version>
+        <junit-jupiter-engine.version>${junit-jupiter.version}</junit-jupiter-engine.version>
+        <junit-jupiter-params.version>${junit-jupiter.version}</junit-jupiter-params.version>
+        <assertj-core.version>3.20.2</assertj-core.version>
         
         <maven-compiler-plugin.version>3.8.1</maven-compiler-plugin.version>
         <maven-jar-plugin.version>3.2.0</maven-jar-plugin.version>
         <maven-failsafe-plugin.version>3.0.0-M5</maven-failsafe-plugin.version>
         <pitest-maven.version>1.6.2</pitest-maven.version>
-        <pitest-junit5-plugin.version>0.12</pitest-junit5-plugin.version>
+        <pitest-junit5-plugin.version>0.15</pitest-junit5-plugin.version>
         <maven-enforcer-plugin.version>3.0.0-M3</maven-enforcer-plugin.version>
         <requireMavenVersion.version>3.2.5</requireMavenVersion.version>
         <maven-surefire-plugin.version>3.0.0-M5</maven-surefire-plugin.version>

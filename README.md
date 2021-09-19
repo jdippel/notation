@@ -5,7 +5,7 @@ This README documents a library for algebraic chess notation.
 ### What is this repository for? ###
 
 * a library for algebraic chess notation.
-* Version 2.2.0
+* Version 2.2.1
 
 ### How do I get set up? ###
 
