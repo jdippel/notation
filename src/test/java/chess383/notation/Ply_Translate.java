@@ -37,7 +37,7 @@ import org.junit.jupiter.params.provider.MethodSource;
  * </p>
  *
  * @author    Jörg Dippel
- * @version   December 2020
+ * @version   September 2021
  *
  */
 @DisplayName("the public method Ply translate( ) for class Ply is tested")
@@ -45,25 +45,32 @@ public class Ply_Translate {
     
     @ParameterizedTest( name = "given a notation \"{0}\" then the notation should be translated into \"{1}\"." )
     @MethodSource("notationAndTranslatedNotationAndLOcaleProvider")
-    public void testWithArgMethodSource_ReturnLongAlgebraicNotation( String fenMove, String translatedMove, Locale language ) {
+    public void testWithArgMethodSource_ReturnLongAlgebraicNotation( String fenMove, String translatedMove, Locale sourceLanguage, Locale targetLanguage ) {
+        
+        Locale currentLocale = Locale.getDefault();
+        Locale.setDefault( sourceLanguage );
         
         Ply ply = Ply.create( Ply.readLocationInformation( fenMove.substring( 1 ) ), Ply.readLocationInformation( fenMove.substring( 4 ) ) )
                 .setPieceType( "" + fenMove.charAt( 0 ) )
                 .setSeparator( ( fenMove.contains( "x" ) ? "x" : "-" ) )
-                .setLocaleTag( Locale.ENGLISH )
+                .setLocaleTag( Locale.getDefault() )
                 .setDescription();
         
         assertThat( translatedMove )
                 .as( String.format( "A ply notation %s should be translated to %s", fenMove, translatedMove ) )
-                .isEqualTo( ply.translate( language ).filterDescription() );
+                .isEqualTo( ply.translate( targetLanguage ).filterDescription() );
+        
+        Locale.setDefault( currentLocale );
     }
     
     
     public static Stream<Arguments> notationAndTranslatedNotationAndLOcaleProvider() {
         return Stream.of(
                 
-            Arguments.of( "Ng1-f3", "Sg1-f3", Locale.GERMAN ),
-            Arguments.of( " d2-d4", " d2-d4", Locale.GERMAN )
+            Arguments.of( "Ng1-f3", "Sg1-f3", Locale.ENGLISH, Locale.GERMAN ),
+            Arguments.of( " d2-d4", " d2-d4", Locale.ENGLISH, Locale.GERMAN ),
+            
+            Arguments.of( "Sg1-f3", "Ng1-f3", Locale.GERMAN, Locale.ENGLISH )
             
         ); }
     
@@ -73,15 +80,19 @@ public class Ply_Translate {
     public void translate_BlackKingsideCastling() {
         
         final String CASTLING = "O-O";
+        Locale currentLocale = Locale.getDefault();
+        Locale.setDefault( Locale.ENGLISH );
         
         Ply ply = Ply.create( "e8", "g8" )
                      .setPieceType( "K" )
                      .setDescription( CASTLING )
-                     .setLocaleTag( Locale.ENGLISH );
+                     .setLocaleTag( Locale.getDefault() );
         
         assertThat( CASTLING )
                 .as( String.format( "A ply notation %s should be translated to %s", CASTLING, CASTLING ) )
                 .isEqualTo( ply.translate( Locale.GERMAN ).filterDescription() );
+        
+        Locale.setDefault( currentLocale );
     }
 
 }

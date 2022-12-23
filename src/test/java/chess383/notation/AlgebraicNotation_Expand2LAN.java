@@ -81,20 +81,68 @@ public class AlgebraicNotation_Expand2LAN {
     
     
     @Test
+    @DisplayName("white pawn opens the game")
+    public void plyForWhitePawnOpening() {
+        
+        ICoordinateFactory.STANDARD.get();
+        final String POSITION_STRING = "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1";
+        final String NOTATION = " e2-e4";
+        
+        AlgebraicNotation notation = AlgebraicNotation.create( POSITION_STRING );
+        Ply ply = notation.expand2LAN( NOTATION );
+
+        assertThat( ply.filterDescription() )
+                   .as( "white pawn opens" )
+                   .isEqualTo( " e2-e4" );
+    }
+
+    @Test
+    @DisplayName("white pawn opens the game")
+    public void plyForWhitePawnOpeningWithoutPreceedingWhiteSpace() {
+
+        ICoordinateFactory.STANDARD.get();
+        final String POSITION_STRING = "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1";
+        final String NOTATION = "e2-e4";
+
+        AlgebraicNotation notation = AlgebraicNotation.create( POSITION_STRING );
+        Ply ply = notation.expand2LAN( NOTATION );
+
+        assertThat( ply.filterDescription() )
+                .as( "white pawn opens" )
+                .isEqualTo( " e2-e4" );
+    }
+
+    @Test
+    @DisplayName("white pawn captures in Center Game")
+    public void plyForWhitePawnCapturingInCenterGane() {
+
+        ICoordinateFactory.STANDARD.get();
+        final String POSITION_STRING = "rnbqkbnr/ppp1pppp/8/3p4/4P3/8/PPPP1PPP/RNBQKBNR w KQkq d6 0 3";
+        final String NOTATION = "ed5";
+
+        AlgebraicNotation notation = AlgebraicNotation.create( POSITION_STRING );
+        Ply ply = notation.expand2LAN( NOTATION );
+
+        assertThat( ply.filterDescription() )
+                .as( "white pawn opens" )
+                .isEqualTo( " e4xd5" );
+    }
+
+    @Test
     @DisplayName("white kingside castling")
     public void plyForWhiteKingsideCastling() {
-        
+
         ICoordinateFactory.STANDARD.get();
         final String KINGSIDE_CASTLING = "O-O";
         final String POSITION_STRING = "r1bqk2r/ppp2ppp/2np1n2/2b1p3/2B1P3/2PP1N2/PP3PPP/RNBQK2R w KQkq - 0 13";
-        
+
         AlgebraicNotation notation = AlgebraicNotation.create( POSITION_STRING );
-        
+
         Ply ply = notation.expand( KINGSIDE_CASTLING );
-        
+
         assertThat( KINGSIDE_CASTLING )
-                   .as( "castling is not described via origin and target location" )
-                   .isEqualTo( ply.filterDescription() );
+                .as( "castling is not described via origin and target location" )
+                .isEqualTo( ply.filterDescription() );
         assertThat( "K" ).as( "piece type" ).isEqualTo( ply.getPieceType() );
         assertThat( "e1" ).as( "origin location" ).isEqualTo( ply.getOriginLocation() );
         assertThat( "g1" ).as( "target location" ).isEqualTo( ply.getTargetLocation() );

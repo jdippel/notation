@@ -2,7 +2,7 @@
  *  Ply.java
  *
  *  chess383 is a collection of chess related utilities.
- *  Copyright (C) 2010-2020 Jörg Dippel
+ *  Copyright (C) 2010-2022 Jörg Dippel
  *
  *  This program is free software: you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -32,7 +32,7 @@ import chess383.piece.abstraction.PieceFactory;
  * Provides the description of a ply.
  *
  * @author    Jörg Dippel
- * @version   December 2020
+ * @version   November 2022
  *
  */
 public class Ply {
@@ -178,19 +178,20 @@ public class Ply {
         return ! isInvalid();
     }
     
-    public Ply translate( Character fenAbbreviation, Locale language ) {
+    public Ply translate( Character fenAbbreviation, Locale toLanguage ) {
         
         final String ARBITRARY_LOCATION = "e5";
         
-        if( getLocaleTag() == language || fenAbbreviation == null ) {
+        Locale fromLanguage = getLocaleTag();
+        if( fromLanguage.equals( toLanguage ) || fenAbbreviation == null ) {
             return this;
         }
         else if( fenAbbreviation == 'O' ) {
             return this;
         }
         else if( Character.isLetter( fenAbbreviation ) ) {
-            Piece piece = PieceFactory.createPiece( ARBITRARY_LOCATION, fenAbbreviation );
-            String pieceType = piece.getType( language );
+            Piece piece = PieceFactory.createPiece( ARBITRARY_LOCATION, fenAbbreviation, fromLanguage );
+            String pieceType = piece.getType( toLanguage );
             if( pieceType.length() == 1 ) {
                 return create( getOriginLocation(), getTargetLocation() )
                        .setSeparator( getSeparator() )
@@ -199,7 +200,7 @@ public class Ply {
                        .setPromotion( getPromotion() )
                        .setDescription( getDescription() )
                        .setComment( getComment() )
-                       .setLocaleTag( language );
+                       .setLocaleTag( toLanguage );
             }
             else {
                 return INVALID_MOVE;
@@ -210,11 +211,11 @@ public class Ply {
         }
     }
     
-    public Ply translate( Locale language ) {
+    public Ply translate( Locale toLanguage ) {
         
         if( getPieceType().length() > 0 ) {
             Character fenAbbreviation = getPieceType().charAt( 0 );
-            return translate( fenAbbreviation, language );
+            return translate( fenAbbreviation,toLanguage );
         }
         else {
             return this;       // no translation
@@ -237,7 +238,7 @@ public class Ply {
     
     @Override
     public String toString() {
-        return getOriginLocation() + getSeparator() + getTargetLocation();
+        return getOriginLocation() + getSeparator() + getTargetLocation() + getPromotion();
     }
     
     @Override

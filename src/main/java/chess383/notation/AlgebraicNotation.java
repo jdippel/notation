@@ -2,7 +2,7 @@
  *  AlgebraicNotation.java
  *
  *  chess383 is a collection of chess related utilities.
- *  Copyright (C) 2010-2021 Jörg Dippel
+ *  Copyright (C) 2010-2022 Jörg Dippel
  *
  *  This program is free software: you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -20,12 +20,15 @@
 
 package chess383.notation;
 
-import java.util.Locale;
-
 import chess383.ColorEnum;
 import chess383.exception.Chess383NotationException;
+import chess383.piece.abstraction.Piece;
 import chess383.piece.abstraction.PieceFactory;
 import chess383.position.Position;
+
+import java.util.Locale;
+
+import static chess383.piece.abstraction.PieceFactory.createPiece;
 
 /**
  * <p>
@@ -35,7 +38,7 @@ import chess383.position.Position;
  * </p>
  *
  * @author    Jörg Dippel
- * @version   January 2021
+ * @version   November 2022
  *
  */
 public class AlgebraicNotation {
@@ -118,7 +121,7 @@ public class AlgebraicNotation {
     private Ply getCastling( String description ) {
         
         final String ARBITRARY_LOCATION = "e5";
-        final String kingPieceType = PieceFactory.createPiece( ARBITRARY_LOCATION, 'K' ).getType();
+        final String kingPieceType = createPiece( ARBITRARY_LOCATION, 'K' ).getType();
         
         if( description.length() > 3 && ( "O-O-".compareTo( description.substring( 0, 4 ) ) == 0 || "0-0-".compareTo( description.substring( 0, 4 ) ) == 0 )) {
             if( getPosition().getActivePlayer().getActive() == ColorEnum.WHITE ) {
@@ -136,20 +139,50 @@ public class AlgebraicNotation {
    
     private boolean isOccupied( String location ) {
     
-    	return getPosition().getFirst().getPlayer().getPiece(location) != null || getPosition().getSecond().getPlayer().getPiece(location) != null;
+        return getPosition().getFirst().getPlayer().getPiece(location) != null || getPosition().getSecond().getPlayer().getPiece(location) != null;
     }
-    
+
+    private boolean isCapture( Ply ply ) {
+
+        return isOccupied( ply.getTargetLocation() );
+    }
+
+    private boolean isPromotion( Ply ply, Piece piece ) {
+
+        return PieceFactory.isPawnToBePromoted( ply.getTargetLocation(), piece );
+    }
+
     public Ply expand( String move ) {
         
-    	if( isCastling( move ) ) return getCastling( move );
-    	
-    	MoveMatch matcher = MoveMatch.create( getPosition(), getInputLocale() );
-    	Ply resultPly = matcher.findByTarget( move ).setLocaleTag( getOutputLocale() );
-    	
-    	resultPly.setPieceType( getPosition().getPiece( resultPly.getOriginLocation() ).getType( getOutputLocale() ) );
-    	if( isOccupied( resultPly.getTargetLocation() ) ) resultPly.setSeparator( Ply.getCaptureSeparator() );
-    	
-    	return resultPly;
+        if( isCastling( move ) ) return getCastling( move );
+        
+        MoveMatch matcher = MoveMatch.create( getPosition(), getInputLocale() );
+        Ply resultPly = matcher.findByTarget( move ).setLocaleTag( getOutputLocale() );
+
+        if( isPromotion( resultPly, getPosition().getPiece( resultPly.getOriginLocation() ) ) ) {
+            String comment = resultPly.getComment();
+            int cursor = 0;
+            char letter;
+            while( cursor < comment.length() ) {
+                letter = comment.charAt( cursor );
+                if( Character.isLetter( letter ) )  {
+                    resultPly.setPromotion( "" + letter );
+                    break;
+                }
+                cursor++;
+            }
+            if( cursor == comment.length() ) {
+                resultPly.setPromotion( "Q" );
+                // here also an exception could be thrown
+            }
+
+        }
+        else {
+            resultPly.setPieceType(getPosition().getPiece(resultPly.getOriginLocation()).getType(getOutputLocale()));
+        }
+        if( isCapture( resultPly ) ) resultPly.setSeparator( Ply.getCaptureSeparator() );
+        
+        return resultPly;
     }
     
     public Ply expand2LAN( String move ) {

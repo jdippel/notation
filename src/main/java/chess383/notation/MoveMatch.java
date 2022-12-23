@@ -104,7 +104,7 @@ public class MoveMatch {
             Character pieceType = Ply.readLetter( move );
             if( Character.isLetter( pieceType ) && Character.isUpperCase( pieceType ) ) return "" + pieceType;
         }
-        return "";  
+        return "";
     }
 
     public Ply findByTarget( String moveDescription ) {
@@ -118,7 +118,7 @@ public class MoveMatch {
     private Piece createPiece( char pieceType, String location ) {
         
         if( pieceType == ' ' ) {
-            return PieceFactory.createPiece( location, ( getPosition().getActivePlayer().getActive() == ColorEnum.WHITE ) ? 'P' : 'p' );
+            return PieceFactory.createPiece( location, getPosition().getPawnLetterForForsythEdwardsNotation() );
         }
         
         if( getInputLocale() == Locale.ENGLISH ) return PieceFactory.createPiece( location, pieceType );
@@ -217,7 +217,7 @@ public class MoveMatch {
         
         List<String> resultList = new ArrayList<String>();
         
-        List<String> pawnLocations = player.getPieceTypeLocations( 'p' );
+        List<String> pawnLocations = player.getPieceTypeLocations( player.getPawnLetterForForsythEdwardsNotation() );
         for( String location : pawnLocations ) {
             if( canPieceMoveToTargetLocation( player.getPiece( location ), targetLocation ) ) {
                 resultList.add( location );
@@ -230,7 +230,7 @@ public class MoveMatch {
         
         List<String> resultList = new ArrayList<String>();
         
-        List<String> pawnLocations = player.getPieceTypeLocations( 'p' );
+        List<String> pawnLocations = player.getPieceTypeLocations( player.getPawnLetterForForsythEdwardsNotation() );
         for( String location : pawnLocations ) {
             if( canPieceCaptureToTargetLocation( player.getPiece( location ), targetLocation ) ) {
                 resultList.add( location );

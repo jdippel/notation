@@ -5,7 +5,7 @@ This README documents a library for algebraic chess notation.
 ### What is this repository for? ###
 
 * a library for algebraic chess notation.
-* Version 2.2.1
+* Version 3.0.5
 
 ### How do I get set up? ###
 
@@ -14,3 +14,9 @@ This README documents a library for algebraic chess notation.
 ### Who do I talk to? ###
 
 * Repo owner or admin
+
+# notation #
+
+With version 3.0.0 a parent pom is introduced that is part of chessparent repository.
+The parent pom.xml is placed relatively one directory above the repository pom.xml.
+
